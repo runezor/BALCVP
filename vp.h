@@ -40,7 +40,6 @@ private:
     std::unordered_map<PC, Value> table;
 };
 
-
 class EqualityPredictorEntry {
 public:
     EqualityPredictorEntry(uint64_t tag) : tag(tag), taken_counter(0), not_taken_counter(0) { }
@@ -397,12 +396,14 @@ struct ValuePredictorParams {
 class ValuePredictor {
 public:
     ValuePredictor(const ValuePredictorParams& params) : params(params), ep({
-        // Base component with small history
-        {.size = 1024, .ghist_bits = 8, .index_bits = 10, .tag_bits = 0},
-        // Medium component
-        {.size = 4096, .ghist_bits = 16, .index_bits = 12, .tag_bits = 12},
-        // Large component with longer history
-        {.size = 8192, .ghist_bits = 32, .index_bits = 13, .tag_bits = 13}
+        // Base tagless component
+        {.size = 4096, .ghist_bits = 0, .index_bits = 12, .tag_bits = 0},
+        {.size = 1024, .ghist_bits = 2, .index_bits = 9, .tag_bits = 12},
+        {.size = 1024, .ghist_bits = 4, .index_bits = 9, .tag_bits = 12},
+        {.size = 1024, .ghist_bits = 8, .index_bits = 9, .tag_bits = 12},
+        {.size = 1024, .ghist_bits = 16, .index_bits = 9, .tag_bits = 12},
+        {.size = 1024, .ghist_bits = 32, .index_bits = 9, .tag_bits = 12},
+        {.size = 1024, .ghist_bits = 64, .index_bits = 9, .tag_bits = 12},
     }) {}
 
     ~ValuePredictor() = default;
